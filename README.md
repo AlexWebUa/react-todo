@@ -1,0 +1,1 @@
+Simple ToDO-list project using React and created from scratch _(without react-create-app)_
