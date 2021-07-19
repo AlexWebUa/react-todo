@@ -1,10 +1,26 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
+import './index.scss';
+import ControlPanel from "./ControlPanel";
 
-class App extends React.Component {
+class List extends React.Component {
     render() {
-        return <h1>Hello, world!</h1>;
+        return (
+            <>
+                <div className='list__header'>ToDo List</div>
+                <ControlPanel />
+                <div className='list__body'>
+                    <div className="item">
+                        <div className='item__checkbox'></div>
+                        <div className='item__title'></div>
+                        <div className='item__priority'></div>
+                        <div className='item__remove'></div>
+                    </div>
+                </div>
+                <div className='list__footer'></div>
+            </>
+        );
     }
 }
 
-ReactDOM.render(<App />, document.getElementById('app'));
+ReactDOM.render(<List />, document.getElementById('list'));
