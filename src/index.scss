@@ -30,7 +30,7 @@ body {
     }
 
     &__controls {
-        padding: 15px 0;
+        padding: 15px;
         display: flex;
         flex-direction: row;
         align-content: center;
@@ -38,9 +38,22 @@ body {
         .control {
             cursor: pointer;
             color: #6f7375;
+            margin-top: auto;
+            margin-bottom: auto;
 
             & + .control {
                 margin-left: 25px;
+            }
+
+            &.priority-selector {
+                select {
+                    margin-left: 5px;
+                    padding: 5px 8px;
+                    background-color: transparent;
+                    border-radius: 10px;
+                    box-shadow: 9px 9px 13px #aeb8ca, -9px -9px 13px #fff;
+                    border: none;
+                }
             }
 
             &.active {
