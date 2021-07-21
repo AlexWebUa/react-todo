@@ -24,7 +24,7 @@ class PrioritySelectorControl extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            value: this.props.defaultValue
+            value: this.props.defaultValue,
         }
 
         this.options = [];
@@ -39,13 +39,14 @@ class PrioritySelectorControl extends React.Component {
 
     handleChange = (e) => {
         this.setState({value: e.target.value});
+        e.currentTarget.blur();
     }
 
     render() {
         return (
-            <label className='control priority-selector'>
+            <label htmlFor='prioritySelector' className='control priority-selector'>
                 Priority:
-                <select id="prioritySelector" value={this.state.value} onChange={this.handleChange}>
+                <select id='prioritySelector' value={this.state.value} onChange={this.handleChange}>
                     {this.options}
                 </select>
             </label>
@@ -68,9 +69,9 @@ class ControlPanel extends React.Component {
                 <PrioritySelectorControl
                     options={[
                         {value: 'all', title: 'All'},
-                        {value: 'high', title: 'High'},
+                        {value: 'low', title: 'Low'},
                         {value: 'medium', title: 'Medium'},
-                        {value: 'low', title: 'Low'}
+                        {value: 'high', title: 'High'}
                     ]}
                     defaultValue='all'
                 />

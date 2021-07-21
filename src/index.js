@@ -2,6 +2,7 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import './index.scss';
 import ControlPanel from "./ControlPanel";
+import ListBody from "./ListBody";
 
 class List extends React.Component {
     render() {
@@ -9,14 +10,7 @@ class List extends React.Component {
             <>
                 <div className='list__header'>ToDo List</div>
                 <ControlPanel />
-                <div className='list__body'>
-                    <div className="item">
-                        <div className='item__checkbox'></div>
-                        <div className='item__title'></div>
-                        <div className='item__priority'></div>
-                        <div className='item__remove'></div>
-                    </div>
-                </div>
+                <ListBody />
                 <div className='list__footer'></div>
             </>
         );

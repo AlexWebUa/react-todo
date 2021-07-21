@@ -11,7 +11,7 @@ body {
 
 .list {
     margin: 50px auto;
-    padding: 0 25px;
+    padding: 0 25px 25px;
     display: flex;
     flex-direction: column;
     flex-wrap: nowrap;
@@ -20,7 +20,6 @@ body {
     min-width: 320px;
     box-shadow: 18px 18px 30px #AEB8CA, -18px -18px 20px #FFF;
     border-radius: 30px;
-    overflow: hidden;
 
     &__header {
         padding: 35px;
@@ -51,13 +50,155 @@ body {
                     padding: 5px 8px;
                     background-color: transparent;
                     border-radius: 10px;
-                    box-shadow: 9px 9px 13px #aeb8ca, -9px -9px 13px #fff;
+                    box-shadow: -3px -3px 4px #fff, 3px 3px 4px #aeb8ca;
                     border: none;
+
+                    &:focus {
+                        box-shadow: inset -3px -3px 4px #fff, inset 3px 3px 4px #aeb8ca;
+                    }
                 }
             }
 
             &.active {
                 font-weight: bold;
+            }
+        }
+    }
+
+    &__body {
+        .item {
+            position: relative;
+            display: flex;
+            flex-direction: row;
+            align-content: center;
+            padding: 5px 0;
+
+            &:after {
+                content: '';
+                position: absolute;
+                display: block;
+                height: 2px;
+                width: 0;
+                left: 5%;
+                background-color: green;
+                top: 50%;
+                transition: .5s width ease-in-out;
+            }
+
+            & + .item {
+                border-top: 1px solid #B4C3CE;
+            }
+
+            &__checkbox{
+                width: 5%;
+                display: flex;
+                cursor: pointer;
+
+                .circle {
+                    margin: auto;
+                    display: flex;
+                    width: 25px;
+                    height: 25px;
+                    border-radius: 50%;
+                    background-color: transparent;
+                    box-shadow: -3px -3px 4px #fff, 3px 3px 4px #aeb8ca;
+
+                    svg {
+                        display: none;
+                        margin: auto;
+                        width: 15px;
+                        height: 15px;
+                        fill: green;
+                    }
+                }
+            }
+
+            &__title {
+                width: 85%;
+                border: none;
+                background: none;
+                padding-left: 10px;
+            }
+
+            &__priority {
+                position: relative;
+                width: 5%;
+                display: flex;
+                padding: 5px;
+                cursor: pointer;
+
+                img {
+                    margin: auto;
+                    width: 15px;
+                }
+
+                &--popup {
+                    display: none;
+                    flex-direction: column;
+                    position: absolute;
+                    background-color: $colorGray;
+                    border: 1px solid #a5a2a2;
+                    border-radius: 10px;
+                    padding: 10px;
+                    right: calc(-100% - 10px);
+                    top: 50%;
+                    transform: translate(0, -50%);
+                    z-index: 10;
+                    cursor: unset;
+
+                    li {
+                        cursor: pointer;
+
+                        & + li {
+                            margin-top: 3px;
+                        }
+                    }
+
+                    &:before {
+                        position: absolute;
+                        content: '';
+                        display: block;
+                        top: 50%;
+                        transform: translate(0, -50%);
+                        left: -5px;
+                        width: 0;
+                        height: 0;
+                        border-top: 7px solid transparent;
+                        border-bottom: 7px solid transparent;
+                        border-right:5px solid #a5a2a2;
+                    }
+
+                    &.show {
+                        display: flex;
+                    }
+                }
+            }
+
+            &__remove {
+                width: 5%;
+                padding: 5px;
+                display: flex;
+                cursor: pointer;
+
+                svg {
+                    margin: auto;
+                    width: 15px;
+                    height: 15px;
+                }
+            }
+
+            &.done {
+                .item__checkbox .circle {
+                    box-shadow: inset -3px -3px 4px #fff, inset 3px 3px 4px #aeb8ca;
+
+                    svg {
+                        display: block;
+                    }
+                }
+
+                &:after {
+                    width: 85%;
+                }
             }
         }
     }
