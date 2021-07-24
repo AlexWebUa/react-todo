@@ -65,6 +65,15 @@ body {
         }
     }
 
+    &__input {
+        background: none;
+        border: none;
+        border-radius: 10px;
+        padding: 10px 15px;
+        box-shadow: inset 5px 5px 5px #aeb8ca, inset -3px -3px 5px #fff;
+        margin-bottom: 20px;
+    }
+
     &__body {
         .item {
             position: relative;
