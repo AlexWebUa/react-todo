@@ -1,23 +1,10 @@
 import React from 'react';
+import {TodoStates} from "./Utils";
 
-class Control extends React.Component {
-    constructor(props) {
-        super(props);
-
-        this.state = {
-            isActive: this.props.isActive ?? false,
-        }
-    }
-
-    render() {
-        const title = this.props.title;
-
-        return(
-            <div className={`control ${this.state.isActive ? 'active' : ''}`} onClick={this.props.onClick}>
-                {title}
-            </div>
-        );
-    }
+function Control(props) {
+    return (
+        <div className={`control ${props.isActive ? 'active' : ''}`} onClick={props.onClick}> {props.title} </div>
+    );
 }
 
 class PrioritySelectorControl extends React.Component {
@@ -27,18 +14,19 @@ class PrioritySelectorControl extends React.Component {
             value: this.props.defaultValue,
         }
 
-        this.options = [];
-        this.props.options.map(option => {
-            this.options.push(
+        this.options = this.props.options.map(
+            option => (
                 <option value={option.value} key={option.value}>
                     {option.title}
                 </option>
-            );
-        });
+            )
+        );
     }
 
     handleChange = (e) => {
-        this.setState({value: e.target.value});
+        this.setState({value: e.target.value}, () => {
+            this.props.changePriorityFilter(this.state.value);
+        });
         e.currentTarget.blur();
     }
 
@@ -55,25 +43,39 @@ class PrioritySelectorControl extends React.Component {
 }
 
 class ControlPanel extends React.Component {
-    handleClick = (e) => {
-        //TODO: change active control, move it to parent component, change view of the list
-        console.log(e.target);
+    constructor(props) {
+        super(props);
+
+        this.controls = [
+            {title: 'All', value: TodoStates.ALL},
+            {title: 'Active', value: TodoStates.ACTIVE},
+            {title: 'Done', value: TodoStates.DONE},
+        ]
     }
 
     render() {
         return (
             <div className='list__controls'>
-                <Control title='All' onClick={this.handleClick} isActive={true} />
-                <Control title='Active' onClick={this.handleClick} />
-                <Control title='Done' onClick={this.handleClick} />
+                {this.controls.map(control => (
+                    <Control
+                        title={control.title}
+                        isActive={control.value === this.props.activeFilter}
+                        onClick={() => {
+                            this.props.changeActiveFilter(control.value)
+                        }}
+                        key={control.value}
+                    />)
+                )}
                 <PrioritySelectorControl
                     options={[
-                        {value: 'all', title: 'All'},
-                        {value: 'low', title: 'Low'},
-                        {value: 'medium', title: 'Medium'},
-                        {value: 'high', title: 'High'}
+                        {value: 'ALL', title: 'All'},
+                        {value: 'NONE', title: 'None'},
+                        {value: 'LOW', title: 'Low'},
+                        {value: 'MEDIUM', title: 'Medium'},
+                        {value: 'HIGH', title: 'High'}
                     ]}
                     defaultValue='all'
+                    changePriorityFilter={this.props.changePriorityFilter}
                 />
             </div>
         );

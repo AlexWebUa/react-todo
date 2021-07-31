@@ -98,7 +98,7 @@ body {
                 border-top: 1px solid #B4C3CE;
             }
 
-            &__checkbox{
+            &__checkbox {
                 width: 5%;
                 display: flex;
                 cursor: pointer;
@@ -124,9 +124,9 @@ body {
 
             &__title {
                 width: 85%;
-                border: none;
-                background: none;
                 padding-left: 10px;
+                display: inline-flex;
+                align-items: center;
             }
 
             &__priority {
@@ -148,8 +148,8 @@ body {
                     background-color: $colorGray;
                     border: 1px solid #a5a2a2;
                     border-radius: 10px;
-                    padding: 10px;
-                    right: calc(-100% - 10px);
+                    padding: 5px 0;
+                    right: -100%;
                     top: 50%;
                     transform: translate(0, -50%);
                     z-index: 10;
@@ -157,9 +157,31 @@ body {
 
                     li {
                         cursor: pointer;
+                        width: 30px;
+                        height: 25px;
 
                         & + li {
                             margin-top: 3px;
+                        }
+
+                        &.none {
+                            background: url("../img/priority-none.png") no-repeat center center;
+                            background-size: 15px auto;
+                        }
+
+                        &.low {
+                            background: url("../img/priority-low.png") no-repeat center center;
+                            background-size: 15px auto;
+                        }
+
+                        &.medium {
+                            background: url("../img/priority-medium.png") no-repeat center center;
+                            background-size: 15px auto;
+                        }
+
+                        &.high {
+                            background: url("../img/priority-high.png") no-repeat center center;
+                            background-size: 15px auto;
                         }
                     }
 
@@ -174,12 +196,12 @@ body {
                         height: 0;
                         border-top: 7px solid transparent;
                         border-bottom: 7px solid transparent;
-                        border-right:5px solid #a5a2a2;
+                        border-right: 5px solid #a5a2a2;
                     }
+                }
 
-                    &.show {
-                        display: flex;
-                    }
+                &.show .item__priority--popup {
+                    display: flex;
                 }
             }
 
@@ -205,10 +227,18 @@ body {
                     }
                 }
 
+                .item__title {
+                    color: #6b6b6b;
+                }
+
                 &:after {
                     width: 85%;
                 }
             }
         }
+    }
+
+    &__footer {
+        margin-top: 20px;
     }
 }

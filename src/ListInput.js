@@ -7,12 +7,12 @@ class ListInput extends React.Component {
         super(props);
 
         this.state = {
-            newTodo: '',
+            newTodoTitle: '',
         }
     }
 
     handleChange = (e) => {
-        this.setState({newTodo: e.target.value});
+        this.setState({newTodoTitle: e.target.value});
     }
 
     handleKeyDown = (e) => {
@@ -22,11 +22,11 @@ class ListInput extends React.Component {
 
         e.preventDefault();
 
-        let val = this.state.newTodo.trim();
+        let val = this.state.newTodoTitle.trim();
 
         if (val) {
             this.props.addTodo(val);
-            this.setState({newTodo: ''});
+            this.setState({newTodoTitle: ''});
         }
     }
 
@@ -36,7 +36,7 @@ class ListInput extends React.Component {
                 className='list__input'
                 placeholder='What do you need to do?'
                 type="text"
-                value={this.state.newTodo}
+                value={this.state.newTodoTitle}
                 onKeyDown={this.handleKeyDown}
                 onChange={this.handleChange}
                 autoFocus={true}
