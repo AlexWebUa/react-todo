@@ -1,6 +1,6 @@
 ## **ToDo list with priorities and filtering**
 
-![](C:\Users\korol\Desktop\1-min.jpg)
+![](https://snipboard.io/X8VTfC.jpg)
 
 - Builded without boilerplates
 - Made without hooks
