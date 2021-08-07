@@ -1,100 +1,77 @@
-import React from 'react';
+import React, {useEffect, useState} from 'react';
 import ControlPanel from "./ControlPanel";
 import ListBody from "./ListBody";
 import ListInput from "./ListInput";
 import {TodoStates} from './Utils';
 
-export default class App extends React.Component {
-    constructor(props) {
-        super(props);
+const App = () => {
+    const [todos, setTodos] = useState(JSON.parse(localStorage.getItem('todos')) || []);
+    const [activeFilter, setActiveFilter] = useState(TodoStates.ALL);
+    const [priorityFilter, setPriorityFilter] = useState('ALL');
 
-        this.state = {
-            todos: JSON.parse(localStorage.getItem('todos')) || [],
-            activeFilter: TodoStates.ALL,
-            priorityFilter: 'ALL',
-        }
-    }
+    useEffect(() => {
+        console.log('effect');
+        localStorage.setItem('todos', JSON.stringify(todos));
+    }, [todos]);
 
-    addTodo = (val) => {
+    function addTodo(val) {
         let key = `${new Date().getTime()}`;
         let item = {
-            done: false,
+            isDone: false,
             title: val,
             priority: 'NONE',
             key: key,
             id: key,
         }
 
-        this.setState(state => {
-            return {todos: state.todos.concat(item)}
-        }, () => {
-            localStorage.setItem('todos', JSON.stringify(this.state.todos));
-        });
+        setTodos(todos.concat(item));
     }
 
-    removeTodo = (key) => {
-        let todos = this.state.todos.filter(todo => todo.id !== key);
-        this.setState({todos: todos}, () => {
-            localStorage.setItem('todos', JSON.stringify(todos));
+    function handleCheck(key, isDone) {
+        let newTodos = todos.map(todo => {
+            if (todo.id === key) todo.isDone = isDone;
+            return todo;
         });
+        setTodos(newTodos);
     }
 
-    handleCheck = (key, done) => {
-        let todos = [...this.state.todos];
-        todos.map(todo => {
-            if (todo.id === key) todo.done = done;
-        });
-        this.setState({todos: todos}, () => {
-            localStorage.setItem('todos', JSON.stringify(todos));
-        });
+    function removeTodo(key) {
+        let newTodos = todos.filter(todo => todo.id !== key);
+        setTodos(newTodos);
     }
 
-    changePriority = (key, priority) => {
-        let todos = [...this.state.todos];
-        todos.map(todo => {
+    function changePriority(key, priority) {
+        let newTodos = todos.map(todo => {
             if (todo.id === key) todo.priority = priority;
             return todo;
         });
-        this.setState({todos: todos}, () => {
-            localStorage.setItem('todos', JSON.stringify(todos));
-        });
+        setTodos(newTodos);
     }
 
-    changeActiveFilter = (filter) => {
-        this.setState({activeFilter: filter})
-    }
+    return (
+        <>
+            <div className='list__header'>ToDo List</div>
 
-    changePriorityFilter = (filter) => {
-        this.setState({priorityFilter: filter})
-    }
+            {todos.length ?
+                <ControlPanel activeFilter={activeFilter}
+                              changeActiveFilter={(filter) => setActiveFilter(filter)}
+                              changePriorityFilter={(filter) => setPriorityFilter(filter)}
+                /> : ''}
 
-    render() {
-        const activeTodos = this.state.todos.reduce((accum, todo) => {
-            return todo.done ? accum : accum + 1;
-        }, 0);
+            <ListInput addTodo={addTodo}/>
 
-        return (
-            <>
-                <div className='list__header'>ToDo List</div>
+            <ListBody
+                todos={todos}
+                activeFilter={activeFilter}
+                priorityFilter={priorityFilter}
+                handleCheck={handleCheck}
+                removeTodo={removeTodo}
+                changePriority={changePriority}
+            />
 
-                {this.state.todos.length ?
-                    <ControlPanel activeFilter={this.state.activeFilter}
-                                  changeActiveFilter={this.changeActiveFilter}
-                                  changePriorityFilter={this.changePriorityFilter}
-                    /> : ''}
-
-                <ListInput addTodo={this.addTodo}/>
-
-                <ListBody
-                    todos={this.state.todos}
-                    activeFilter={this.state.activeFilter}
-                    priorityFilter={this.state.priorityFilter}
-                    handleCheck={this.handleCheck} removeTodo={ key => {this.removeTodo(key)} }
-                    changePriority={this.changePriority}
-                />
-
-                {this.state.todos.length ? <div className='list__footer'>{activeTodos} remaining</div> : ''}
-            </>
-        );
-    }
+            {todos.length ? <div className='list__footer'>{todos.reduce((accum, todo) => {return todo.isDone ? accum : accum + 1;}, 0)} remaining</div> : ''}
+        </>
+    );
 }
+
+export default App;

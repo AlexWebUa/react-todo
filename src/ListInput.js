@@ -1,48 +1,36 @@
-import React from 'react';
+import React, {useState} from 'react';
 
 const ENTER_KEY = 13;
 
-class ListInput extends React.Component {
-    constructor(props) {
-        super(props);
+const ListInput = ({addTodo}) => {
+    const [newTodoTitle, setNewTodoTitle] = useState('');
 
-        this.state = {
-            newTodoTitle: '',
-        }
-    }
-
-    handleChange = (e) => {
-        this.setState({newTodoTitle: e.target.value});
-    }
-
-    handleKeyDown = (e) => {
+    function handleKeyDown(e) {
         if (e.keyCode !== ENTER_KEY) {
             return;
         }
 
         e.preventDefault();
 
-        let val = this.state.newTodoTitle.trim();
+        let val = newTodoTitle.trim();
 
         if (val) {
-            this.props.addTodo(val);
-            this.setState({newTodoTitle: ''});
+            addTodo(val);
+            setNewTodoTitle('');
         }
     }
 
-    render() {
-        return (
-            <input
-                className='list__input'
-                placeholder='What do you need to do?'
-                type="text"
-                value={this.state.newTodoTitle}
-                onKeyDown={this.handleKeyDown}
-                onChange={this.handleChange}
-                autoFocus={true}
-            />
-        );
-    }
+    return (
+        <input
+            className='list__input'
+            placeholder='What do you need to do?'
+            type="text"
+            value={newTodoTitle}
+            onKeyDown={handleKeyDown}
+            onChange={(e) => {setNewTodoTitle(e.target.value)}}
+            autoFocus={true}
+        />
+    );
 }
 
 export default ListInput;

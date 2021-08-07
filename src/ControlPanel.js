@@ -1,85 +1,63 @@
-import React from 'react';
+import React, {useState} from 'react';
 import {TodoStates} from "./Utils";
 
-function Control(props) {
+const Control = ({title, isActive, onClick}) => {
     return (
-        <div className={`control ${props.isActive ? 'active' : ''}`} onClick={props.onClick}> {props.title} </div>
+        <div className={`control ${isActive ? 'active' : ''}`} onClick={onClick}> {title} </div>
     );
 }
 
-class PrioritySelectorControl extends React.Component {
-    constructor(props) {
-        super(props);
-        this.state = {
-            value: this.props.defaultValue,
-        }
+const PrioritySelectorControl = ({options, defaultValue, changePriorityFilter}) => {
+    const [value, setValue] = useState(defaultValue);
 
-        this.options = this.props.options.map(
-            option => (
-                <option value={option.value} key={option.value}>
-                    {option.title}
-                </option>
-            )
-        );
-    }
-
-    handleChange = (e) => {
-        this.setState({value: e.target.value}, () => {
-            this.props.changePriorityFilter(this.state.value);
-        });
-        e.currentTarget.blur();
-    }
-
-    render() {
-        return (
-            <label htmlFor='prioritySelector' className='control priority-selector'>
-                Priority:
-                <select id='prioritySelector' value={this.state.value} onChange={this.handleChange}>
-                    {this.options}
-                </select>
-            </label>
-        );
-    }
+    return (
+        <label htmlFor='prioritySelector' className='control priority-selector'>
+            Priority:
+            <select id='prioritySelector' value={value} onChange={
+                (e) => {
+                    setValue(e.target.value);
+                    changePriorityFilter(e.target.value);
+                    e.currentTarget.blur()
+                }
+            }>
+                {options.map(option => (<option value={option.value} key={option.value}>{option.title}</option>))}
+            </select>
+        </label>
+    );
 }
 
-class ControlPanel extends React.Component {
-    constructor(props) {
-        super(props);
+const ControlPanel = ({activeFilter, changeActiveFilter, changePriorityFilter}) => {
+    const controls = [
+        {title: 'All', value: TodoStates.ALL},
+        {title: 'Active', value: TodoStates.ACTIVE},
+        {title: 'Done', value: TodoStates.DONE},
+    ]
 
-        this.controls = [
-            {title: 'All', value: TodoStates.ALL},
-            {title: 'Active', value: TodoStates.ACTIVE},
-            {title: 'Done', value: TodoStates.DONE},
-        ]
-    }
-
-    render() {
-        return (
-            <div className='list__controls'>
-                {this.controls.map(control => (
-                    <Control
-                        title={control.title}
-                        isActive={control.value === this.props.activeFilter}
-                        onClick={() => {
-                            this.props.changeActiveFilter(control.value)
-                        }}
-                        key={control.value}
-                    />)
-                )}
-                <PrioritySelectorControl
-                    options={[
-                        {value: 'ALL', title: 'All'},
-                        {value: 'NONE', title: 'None'},
-                        {value: 'LOW', title: 'Low'},
-                        {value: 'MEDIUM', title: 'Medium'},
-                        {value: 'HIGH', title: 'High'}
-                    ]}
-                    defaultValue='all'
-                    changePriorityFilter={this.props.changePriorityFilter}
-                />
-            </div>
-        );
-    }
+    return (
+        <div className='list__controls'>
+            {controls.map(control => (
+                <Control
+                    title={control.title}
+                    isActive={control.value === activeFilter}
+                    onClick={() => {
+                        changeActiveFilter(control.value)
+                    }}
+                    key={control.value}
+                />)
+            )}
+            <PrioritySelectorControl
+                options={[
+                    {value: 'ALL', title: 'All'},
+                    {value: 'NONE', title: 'None'},
+                    {value: 'LOW', title: 'Low'},
+                    {value: 'MEDIUM', title: 'Medium'},
+                    {value: 'HIGH', title: 'High'}
+                ]}
+                defaultValue='all'
+                changePriorityFilter={changePriorityFilter}
+            />
+        </div>
+    );
 }
 
 export default ControlPanel;
