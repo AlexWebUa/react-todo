@@ -1,58 +1,45 @@
-import React, {useEffect, useState} from 'react';
+import React, {useEffect, useState, useReducer} from 'react';
 import ControlPanel from "./ControlPanel";
 import ListBody from "./ListBody";
 import ListInput from "./ListInput";
-import {TodoStates} from './Utils';
+import {Context} from "./context";
+import reducer from "./reducer";
+
+const Priorities = {
+    NONE: '../img/priority-none.png',
+    LOW: '../img/priority-low.png',
+    MEDIUM: '../img/priority-medium.png',
+    HIGH: '../img/priority-high.png',
+}
 
 const App = () => {
-    const [todos, setTodos] = useState(JSON.parse(localStorage.getItem('todos')) || []);
-    const [activeFilter, setActiveFilter] = useState(TodoStates.ALL);
+    const [state, dispatch] = useReducer(reducer, JSON.parse(localStorage.getItem('todos')));
+    const [activeFilter, setActiveFilter] = useState(null);
     const [priorityFilter, setPriorityFilter] = useState('ALL');
 
     useEffect(() => {
-        console.log('effect');
-        localStorage.setItem('todos', JSON.stringify(todos));
-    }, [todos]);
+        localStorage.setItem('todos', JSON.stringify(state));
+    }, [state]);
 
-    function addTodo(val) {
+    function addTodo(title) {
         let key = `${new Date().getTime()}`;
-        let item = {
-            isDone: false,
-            title: val,
-            priority: 'NONE',
-            key: key,
-            id: key,
-        }
 
-        setTodos(todos.concat(item));
-    }
-
-    function handleCheck(key, isDone) {
-        let newTodos = todos.map(todo => {
-            if (todo.id === key) todo.isDone = isDone;
-            return todo;
-        });
-        setTodos(newTodos);
-    }
-
-    function removeTodo(key) {
-        let newTodos = todos.filter(todo => todo.id !== key);
-        setTodos(newTodos);
-    }
-
-    function changePriority(key, priority) {
-        let newTodos = todos.map(todo => {
-            if (todo.id === key) todo.priority = priority;
-            return todo;
-        });
-        setTodos(newTodos);
+        dispatch({
+            type: 'add',
+            payload: {
+                title: title,
+                key: key
+            }
+        })
     }
 
     return (
-        <>
+        <Context.Provider value={{
+            dispatch, Priorities
+        }}>
             <div className='list__header'>ToDo List</div>
 
-            {todos.length ?
+            {state.length ?
                 <ControlPanel activeFilter={activeFilter}
                               changeActiveFilter={(filter) => setActiveFilter(filter)}
                               changePriorityFilter={(filter) => setPriorityFilter(filter)}
@@ -61,16 +48,13 @@ const App = () => {
             <ListInput addTodo={addTodo}/>
 
             <ListBody
-                todos={todos}
+                todos={state}
                 activeFilter={activeFilter}
                 priorityFilter={priorityFilter}
-                handleCheck={handleCheck}
-                removeTodo={removeTodo}
-                changePriority={changePriority}
             />
 
-            {todos.length ? <div className='list__footer'>{todos.reduce((accum, todo) => {return todo.isDone ? accum : accum + 1;}, 0)} remaining</div> : ''}
-        </>
+            {state.length ? <div className='list__footer'>{state.reduce((accum, todo) => {return todo.isDone ? accum : accum + 1;}, 0)} remaining</div> : ''}
+        </Context.Provider>
     );
 }
 

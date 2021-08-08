@@ -1,11 +1,4 @@
 import React, {useState} from 'react';
-import {TodoStates} from "./Utils";
-
-const Control = ({title, isActive, onClick}) => {
-    return (
-        <div className={`control ${isActive ? 'active' : ''}`} onClick={onClick}> {title} </div>
-    );
-}
 
 const PrioritySelectorControl = ({options, defaultValue, changePriorityFilter}) => {
     const [value, setValue] = useState(defaultValue);
@@ -28,22 +21,20 @@ const PrioritySelectorControl = ({options, defaultValue, changePriorityFilter}) 
 
 const ControlPanel = ({activeFilter, changeActiveFilter, changePriorityFilter}) => {
     const controls = [
-        {title: 'All', value: TodoStates.ALL},
-        {title: 'Active', value: TodoStates.ACTIVE},
-        {title: 'Done', value: TodoStates.DONE},
+        {title: 'All', value: null},
+        {title: 'Active', value: false},
+        {title: 'Done', value: true},
     ]
 
     return (
         <div className='list__controls'>
             {controls.map(control => (
-                <Control
-                    title={control.title}
-                    isActive={control.value === activeFilter}
-                    onClick={() => {
-                        changeActiveFilter(control.value)
-                    }}
-                    key={control.value}
-                />)
+                    <div
+                        key={control.value}
+                        className={`control ${control.value === activeFilter ? 'active' : ''}`}
+                        onClick={() => {changeActiveFilter(control.value)}}
+                    >{control.title}</div>
+                )
             )}
             <PrioritySelectorControl
                 options={[

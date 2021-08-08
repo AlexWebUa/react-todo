@@ -1,25 +1,21 @@
 import React from 'react';
 import ListItem from "./ListItem";
-import {TodoStates} from './Utils';
 
-const ListBody = ({todos, activeFilter, priorityFilter, handleCheck, removeTodo, changePriority}) => {
+const ListBody = ({todos, activeFilter, priorityFilter}) => {
     let todosCopy = [...todos];
 
+    if (activeFilter !== null) {
+        todosCopy = todosCopy.filter(todo => activeFilter === todo.isDone);
+    }
     if (priorityFilter !== 'ALL') {
-        todosCopy = todos.filter(todo => priorityFilter === todo.priority);
+        todosCopy = todosCopy.filter(todo => priorityFilter === todo.priority);
     }
 
     return (
         <div className='list__body'>
-            {
-                todosCopy.map(todo => {
-                    let listItem = <ListItem handleCheck={handleCheck} removeTodo={removeTodo} changePriority={changePriority} {...todo}/>;
-
-                    if (activeFilter === TodoStates.ACTIVE && !todo.isDone) return listItem;
-                    else if (activeFilter === TodoStates.DONE && todo.isDone) return listItem;
-                    else if (activeFilter === TodoStates.ALL) return listItem;
-                })
-            }
+            {todosCopy.map(todo => (
+                <ListItem {...todo}/>
+            ))}
         </div>
     );
 }
